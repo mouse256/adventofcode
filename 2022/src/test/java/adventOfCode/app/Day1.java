@@ -50,7 +50,7 @@ class Day1 {
 
         });
         elves.add(elfTotal);
-        elves.forEach(e -> System.out.println("ET: " + e));
+        //elves.forEach(e -> System.out.println("ET: " + e));
         int max = elves.stream().mapToInt(x -> x).max().orElseThrow();
         System.out.println("MAX: " + max);
         return max;
