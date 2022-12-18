@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -29,5 +31,11 @@ class MessageUtils {
         } catch (IOException e) {
             throw new RuntimeException("error reading file " + filename, e);
         }
+    }
+
+    public static List<String> readLinesAll(String filename) {
+        List<String> lines = new ArrayList<>();
+        readLines(filename, lines::add);
+        return  lines;
     }
 }

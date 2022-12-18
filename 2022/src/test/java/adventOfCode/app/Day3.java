@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,10 +18,12 @@ class Day3 {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private int sum;
     private char found = '\0';
+    private int count;
 
     @BeforeEach
-     void setup() {
+    void setup() {
         sum = 0;
+        count = 0;
     }
 
     @Test
@@ -29,8 +32,18 @@ class Day3 {
     }
 
     @Test
+    void test2() {
+        assertEquals(15, run2("day3-test.txt"));
+    }
+
+    @Test
     void part1() {
         run("day3.txt");
+    }
+
+    @Test
+    void part2() {
+        run2("day3.txt");
     }
 
     private int run(String filename) {
@@ -54,7 +67,7 @@ class Day3 {
             if (found == '\0') {
                 throw new IllegalStateException("not found");
             }
-            int foundInt = (int)found;
+            int foundInt = (int) found;
             int score;
             if (foundInt >= 97) {
                 score = foundInt - 97 + 1;
@@ -64,6 +77,41 @@ class Day3 {
             //LOG.info("Found {} -- {} -- {}", found, (int) found, score);
             sum += score;
         });
+        LOG.info("Sum: {}", sum);
+        return sum;
+    }
+
+
+    private int run2(String filename) {
+        List<String> lines = MessageUtils.readLinesAll(filename);
+        for (int i = 0; i < lines.size(); i += 3) {
+            String line = lines.get(i);
+            for (char c : line.toCharArray()) {
+                count = 0;
+                if (lines.get(i + 1).contains(String.valueOf(c))) {
+                    count++;
+                }
+                if (lines.get(i + 2).contains(String.valueOf(c))) {
+                    count++;
+                }
+                if (count == 2) {
+
+
+                    int foundInt = (int) c;
+                    int score;
+                    if (foundInt >= 97) {
+                        score = foundInt - 97 + 1;
+                    } else {
+                        score = foundInt - 65 + 27;
+                    }
+                    //LOG.info("Line {}, badge is {}, score: {}",i, c, score);
+                    sum += score;
+
+                    break;
+                }
+            }
+
+        }
         LOG.info("Sum: {}", sum);
         return sum;
     }
