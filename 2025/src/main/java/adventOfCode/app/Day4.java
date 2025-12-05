@@ -18,7 +18,7 @@ public class Day4 {
     private String topLine = null;
     private String middleLine = null;
     private String bottomLine = null;
-    private List<String> newLines = new ArrayList<>();
+    private final List<String> newLines = new ArrayList<>();
 
     public Day4(String filename) {
         this.filename = filename;
@@ -71,14 +71,11 @@ public class Day4 {
         }
     }
 
+
     private void handle(String top, String middle, String bottom) {
         Res res = processP2(top, middle, bottom);
         count += res.count;
         newLines.add(res.newLine);
-    }
-
-    private void process() {
-
     }
 
 
@@ -99,7 +96,7 @@ public class Day4 {
                 .flatMap(t -> extract(t, pos));
     }
 
-    public static long process(String top, String middle, String bottom) {
+    public static long processOld(String top, String middle, String bottom) {
         LOG.debug("Checking {} -- {} -- {}", top, middle, bottom);
         int total = 0;
         for (int i = 0; i < middle.length(); i++) {
@@ -125,7 +122,8 @@ public class Day4 {
         return total;
     }
 
-    public record Res(int count, String newLine){}
+    public record Res(int count, String newLine) {
+    }
 
     public static Res processP2(String top, String middle, String bottom) {
         LOG.debug("Checking {} -- {} -- {}", top, middle, bottom);
@@ -155,48 +153,25 @@ public class Day4 {
                 newLine.append('@');
             }
         }
-        return new  Res(total, newLine.toString());
+        return new Res(total, newLine.toString());
     }
 
-//    public static long process2(String top, String middle, String bottom) {
-//        LOG.debug("Checking {} -- {} -- {}", top, middle, bottom);
-//
-//        List<Character> list = IntStream.range(0, middle.length())
-//                .filter(index -> middle.charAt(index) == '@')
-//                .boxed()
-//                .flatMap(i ->
-//                        Stream.of(
-//                                extract2(top, i),
-//                                extract2(middle, i),
-//                                extract2(bottom, i)))
-//                .flatMap(x -> x)
-//                .filter(c -> c == '@')
-//                .toList();
-//
-//        int total = 0;
-//        for (int i = 0; i < middle.length(); i++) {
-//            if (middle.charAt(i) != '@') {
-//                continue;
-//            }
-//
-//            long count = Stream.of(
-//                            extract2(top, i),
-//                            extract2(middle, i),
-//                            extract2(bottom, i))
-//                    .flatMap(x -> x)
-//                    .filter(c -> c == '@')
-//                    .count();
-//
-//
-//            LOG.debug("i: {} -- count: {}", i, count);
-//
-//            if (count <= 4) {
-//                total++;
-//            }
-//        }
-//        return total;
-//
-//    }
+    public static long process(String top, String middle, String bottom) {
+        LOG.debug("Checking {} -- {} -- {}", top, middle, bottom);
 
-
+        return IntStream.range(0, middle.length())
+                .filter(index -> middle.charAt(index) == '@')
+                .boxed()
+                .map(i ->
+                        Stream.of(
+                                        extract2(top, i),
+                                        extract2(middle, i),
+                                        extract2(bottom, i))
+                                .flatMap(x -> x)
+                                .filter(c -> c == '@')
+                                .count()
+                )
+                .filter(c -> c <=4)
+                .count();
+    }
 }
